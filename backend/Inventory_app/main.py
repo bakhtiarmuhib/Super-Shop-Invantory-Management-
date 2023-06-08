@@ -1,10 +1,10 @@
 from fastapi import FastAPI,Depends
 from pydantic import BaseModel
 from . import models,schemas
-from .routers import authentication,users
+from .routers import authentication,users,oauth2,category,product
 from .database import SessionLocal, engine
 from pydantic import BaseModel
-from .routers import oauth2
+
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -33,4 +33,6 @@ def show(request: Item, current_user: schemas.User = Depends(oauth2.get_current_
 
 app.include_router(authentication.router)
 app.include_router(users.router)
+app.include_router(category.router)
+app.include_router(product.router)
 

@@ -12,3 +12,6 @@ class User(BaseModel):
     email : str
     user_role : str
     password : str
+
+class Create_category(BaseModel):
+    category_name : str
