@@ -1,4 +1,4 @@
-from jose import JWTError, jwt
+from jose import jwt,JWTError
 from pydantic import BaseModel
 from datetime import datetime, timedelta
 
@@ -12,6 +12,9 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+class TokenData(BaseModel):
+    email: str | None = None
+
 
 def create_access_token(data: dict):
     to_encode = data.copy()
@@ -19,3 +22,15 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+
+def verify_token(data: str, credentials_exception):
+    try:
+        payload = jwt.decode(data, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+        token_data = TokenData(email=email)
+    except JWTError:
+        raise credentials_exception
+    

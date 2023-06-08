@@ -1,5 +1,6 @@
 from fastapi import APIRouter,Depends,HTTPException,status
 from ..import schemas , models,hashing
+from . import oauth2
 from sqlalchemy.orm import Session
 from ..database import SessionLocal
 router = APIRouter(tags=['User'])
@@ -16,7 +17,7 @@ def get_db():
 
 
 @router.post('/create-user/')
-def create_new_user(request:schemas.User, db: Session = Depends(get_db)):
+def create_new_user(request:schemas.User, db: Session = Depends(get_db),current_user: schemas.User = Depends(oauth2.get_current_user)):
     user = db.query(models.User).filter(models.User.email == request.email).first()
     print(user)
     if user:
