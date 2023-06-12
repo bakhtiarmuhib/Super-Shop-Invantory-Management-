@@ -35,7 +35,7 @@ def update_category(id : int,request : schemas.Create_category ,db : Session = D
 
 
 @router.delete('/delete-category/{id}')
-def update_category(id : int, db : Session = Depends(database.get_db), current_user : schemas.User = Depends(oauth2.get_current_user)):
+def delete_category(id : int, db : Session = Depends(database.get_db), current_user : schemas.User = Depends(oauth2.get_current_user)):
     get_category = db.query(models.Category).filter(models.Category.id == id).first()
     if not get_category:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='No category for delete.')

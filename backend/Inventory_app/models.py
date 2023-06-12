@@ -4,12 +4,12 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-product_and_brand_association_tabel = Table(
-    'associate_between_band_product',
-    Base.metadata,
-    Column('brand_id',ForeignKey('brand.id')),
-    Column('product_id',ForeignKey('products.id')),
-)
+# product_and_brand_association_tabel = Table(
+#     'associate_between_band_product',
+#     Base.metadata,
+#     Column('brand_id',ForeignKey('brands.id')),
+#     Column('product_id',ForeignKey('products.id')),
+# )
 
 product_and_attribute_association_tabel = Table(
     'associate_between_attribute_product',
@@ -29,23 +29,26 @@ class User(Base):
     user_role = Column(String)
     password = Column(String)
     #photo
+    #sale
+    
+    sale = relationship('Sale',back_populates='saller',uselist=False)
 
 class Category(Base):
     __tablename__ = 'categories'
 
     id = Column(Integer, primary_key=True, index=True)
     category_name = Column(String)
-    product = relationship('Product', back_populates='category',cascade='all, delete')
+    product = relationship('Product', back_populates='category',uselist=False)
 
 
 class Brand(Base):
-    __tablename__ = 'brand'
+    __tablename__ = 'brands'
 
     id = Column(Integer,primary_key=True,index=True)
     brand_name = Column(String)
 
     
-    # product  = relationship('Product', secondary=product_and_brand_association_tabel, back_populates='brand')
+    product_brand  = relationship('Product', back_populates='brand',uselist=False)
 
 
 class Product_attribute(Base):
@@ -56,7 +59,7 @@ class Product_attribute(Base):
     attibute_value = Column(String)
 
     #product
-    # product  = relationship('Product', secondary=product_and_attribute_association_tabel, back_populates='product_attribute')
+    attribute_in_product  = relationship('Product', secondary=product_and_attribute_association_tabel, back_populates='product_attribute')
 
 
 
@@ -64,20 +67,23 @@ class Product(Base):
     __tablename__ = 'products'
 
     id = Column(Integer, primary_key=True, index=True)
+    product_name = Column(String)
     product_code = Column(String)
     stock = Column(Integer)
     sales_price = Column(Integer)
     purchase_cost = Column(Integer)
+    unit = Column(String,nullable=True)
     #attributes
-    # attribute  = relationship('Product_attribute', secondary=product_and_attribute_association_tabel, back_populates='products')
+    product_attribute  = relationship('Product_attribute', secondary=product_and_attribute_association_tabel, back_populates='attribute_in_product')
     #category
     category_id = Column(Integer, ForeignKey('categories.id'))
     category = relationship('Category',back_populates='product')
     #brand 
-    # brand  = relationship('Brand', secondary=product_and_brand_association_tabel, back_populates='products')
+    brand_id = Column(Integer, ForeignKey('brands.id'))
+    brand  = relationship('Brand', back_populates='product_brand')
     #sales
-    # category_id = Column(Integer, ForeignKey('sales.id'))
-    # product_sale = relationship('Sale',back_populates='product_sale')
+    
+    
 
 
 
@@ -88,12 +94,25 @@ class Sale(Base):
     unit = Column(Integer)
     price = Column(Integer)
     customer_phone_number = Column(String)
+    
     #Product
-    # product_sale=relationship('Product', back_populates='products',cascade='all, delete')
+    
+    #user
+    saller_id = Column(Integer , ForeignKey('user.id'))
+    saller = relationship('User',back_populates='sale')
+
     
 
 # class Damage(Base):
 #     __tablename__ = 'damage'
+
+#     id = Column(Integer, primary_key=True, index=True)
+#     #product
+#     unit = Column(Integer)
+#     cause = Column(String)
+
+# class Return(Base):
+#     __tablename__ = 'returns'
 
 #     id = Column(Integer, primary_key=True, index=True)
 #     #product

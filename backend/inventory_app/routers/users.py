@@ -26,4 +26,4 @@ def create_new_user(request:schemas.User, db: Session = Depends(get_db)):
     db.add(create_user)
     db.commit()
     db.refresh(create_user)
-    return create_user
+    return {'detail': 'User Created Successfully'}
