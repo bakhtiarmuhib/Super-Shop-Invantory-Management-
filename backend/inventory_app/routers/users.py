@@ -27,3 +27,23 @@ def create_new_user(request:schemas.User, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(create_user)
     return {'detail': 'User Created Successfully'}
+
+
+@router.put('/update-user/{id}')
+def update_use(id, request: schemas.Update_User ,db: Session = Depends(get_db),current_user : schemas.User = Depends(oauth2.get_current_user)):
+    user_for_update = db.query(models.User).filter(models.User.id == id)
+    if not user_for_update:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='No user found for update')
+    user_for_update.update(request.dict())
+    db.commit()
+    return {'detail' : 'User updated successfully.'}
+    
+
+# @router.update('/change-password/{id}')
+# def update_use(request: schemas.Update_User ,db: Session = Depends(get_db),current_user : schemas.User = Depends(oauth2.get_current_user)):
+#     user_for_update = db.query(models.User).filter(models.User.id == id)
+#     if not user_for_update:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='No user found for update')
+#     user_for_update.update(request.dict())
+#     db.commit()
+#     return {'detail' : 'User updated successfully.'}

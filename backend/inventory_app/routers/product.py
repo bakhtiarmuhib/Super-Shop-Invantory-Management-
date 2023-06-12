@@ -13,6 +13,7 @@ router = APIRouter(tags=['Product'])
 @router.get('/product',response_model=List[schemas.Show_Product] ,status_code=status.HTTP_200_OK)
 def get_product(db : Session = Depends(database.get_db), current_user:schemas.User = Depends(oauth2.get_current_user)):
     all_product = db.query(models.Product).all()
+    print(current_user)
     if not all_product:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail='Product data not found.')
     return all_product

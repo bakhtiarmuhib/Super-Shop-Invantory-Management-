@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional,List
 from pydantic import BaseModel
 
 
@@ -13,6 +13,11 @@ class User(BaseModel):
     email : str
     user_role : str
     password : str
+
+
+class Update_User(BaseModel):
+    first_name : str
+    last_name : str
 
 
 class Create_category(BaseModel):
@@ -54,3 +59,12 @@ class Show_Product(Create_Product):
     brand : Show_Brand
     class Config:
         orm_mode = True
+
+class Create_Sales(BaseModel):
+    unit:int
+    customer_phone_number : str
+    product_id : int
+    saller_id : int
+
+
+ 

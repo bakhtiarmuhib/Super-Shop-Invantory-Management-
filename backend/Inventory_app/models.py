@@ -4,12 +4,12 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-# product_and_brand_association_tabel = Table(
-#     'associate_between_band_product',
-#     Base.metadata,
-#     Column('brand_id',ForeignKey('brands.id')),
-#     Column('product_id',ForeignKey('products.id')),
-# )
+product_and_sales_association_table = Table(
+    'associate_between_product_and_sales',
+    Base.metadata,
+    Column('sale_id',ForeignKey('sales.id')),
+    Column('product_id',ForeignKey('products.id')),
+)
 
 product_and_attribute_association_tabel = Table(
     'associate_between_attribute_product',
@@ -23,8 +23,8 @@ class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True, index=True)
-    first_name = Column(String)
-    last_name = Column(String)
+    first_name = Column(String,nullable=True)
+    last_name = Column(String,nullable=True)
     email = Column(String)
     user_role = Column(String)
     password = Column(String)
@@ -48,7 +48,7 @@ class Brand(Base):
     brand_name = Column(String)
 
     
-    product_brand  = relationship('Product', back_populates='brand',uselist=False)
+    product_brand  = relationship('Product', back_populates='brand')
 
 
 class Product_attribute(Base):
@@ -82,6 +82,11 @@ class Product(Base):
     brand_id = Column(Integer, ForeignKey('brands.id'))
     brand  = relationship('Brand', back_populates='product_brand')
     #sales
+    sales_product = relationship('Sale', back_populates='products_in_sales')
+
+
+# class Sale_Product(Base):
+#     pass
     
     
 
@@ -92,11 +97,12 @@ class Sale(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     unit = Column(Integer)
-    price = Column(Integer)
+    total_price = Column(Integer)
     customer_phone_number = Column(String)
     
     #Product
-    
+    product_id = Column(Integer,ForeignKey('products.id'))
+    products_in_sales = relationship('Product', back_populates='sales_product')
     #user
     saller_id = Column(Integer , ForeignKey('user.id'))
     saller = relationship('User',back_populates='sale')
