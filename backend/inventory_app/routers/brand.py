@@ -1,6 +1,6 @@
 from fastapi import APIRouter,Depends,HTTPException,status
 from .. import schemas,database,models
-from . import oauth2
+from . import oauth2,JWTtoken
 from sqlalchemy.orm import Session
 
 router = APIRouter(tags=['Brand'])
@@ -9,7 +9,9 @@ router = APIRouter(tags=['Brand'])
 
 
 @router.get('/brand',status_code=status.HTTP_200_OK)
-def get_brand(db : Session = Depends(database.get_db), current_user:schemas.User = Depends(oauth2.get_current_user)):
+def get_brand(db : Session = Depends(database.get_db), current_user:schemas.User = Depends(oauth2.get_current_user),current_active_user :schemas.Show_User = Depends(oauth2.get_current_active_user)):
+    print('current')
+    print()
     all_brand = db.query(models.Brand).all()
     if not all_brand:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail='Brand data not found.')

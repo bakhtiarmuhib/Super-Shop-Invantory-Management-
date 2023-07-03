@@ -126,3 +126,9 @@ class Sale(Base):
 #     cause = Column(String)
     
 
+
+class TestTable(Base):
+    __tablename__ = 'TestTable'
+
+    id = Column(Integer,primary_key=True,index=True)
+    brand_name = Column(String)

@@ -67,4 +67,13 @@ class Create_Sales(BaseModel):
     saller_id : int
 
 
+class Show_User(BaseModel):
+    first_name : str
+    last_name : str
+    email : str
+    user_role : str
+    class Config:
+        orm_mode = True
+
+
  

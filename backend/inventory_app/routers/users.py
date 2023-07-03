@@ -47,3 +47,10 @@ def update_use(id, request: schemas.Update_User ,db: Session = Depends(get_db),c
 #     user_for_update.update(request.dict())
 #     db.commit()
 #     return {'detail' : 'User updated successfully.'}
+
+
+# @app.get("/users/me/", response_model=User)
+# async def read_users_me(
+#     current_user: Annotated[User, Depends(get_current_active_user)]
+# ):
+#     return current_user

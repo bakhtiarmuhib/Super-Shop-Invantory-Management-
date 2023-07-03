@@ -22,3 +22,4 @@ app.include_router(brand.router)
 app.include_router(product.router)
 app.include_router(sale.router)
 
+
